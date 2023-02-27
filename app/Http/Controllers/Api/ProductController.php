@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers\Api;
 
+use id;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+
 
 class ProductController extends Controller
 {
@@ -30,15 +32,25 @@ class ProductController extends Controller
         return $product;
     }
 
-    public function update(Request $request, string $id)
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Models\Product  $product
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, int $id)
     {
-        $product = Product::findOrFail($request, $id);
-        $product->description = $request->description;
-        $product->price = $request->price;
-        $product->stock = $request->stock;
-
+        $product = Product::findOrFail($id);
+        $product->description = $request["description"];
+        $product->price = $request["price"];
+        $product->stock = $request["stock"];
         $product->save();
-        return $product;
+
+        return response()->json([
+            'mensaje' => 'Datos del producto modificado',
+            'data' => $product,
+        ]);
     }
 
     public function destroy(string $id)
